@@ -1,0 +1,22 @@
+trigger countContactTrigger on Account (after insert, after update) {
+    List<Account> listOfAccount = new List<Account>();
+    List<Contact> listOfContact = new List<Contact>();
+    for (Account a : trigger.new) {
+        listOfAccount.add(a);
+    }
+    if (listOfAccount.size() > 0) {
+        for (Account acc : listOfAccount) {
+            Integer i = 0;
+            if (acc.No_Of_Contacts__c != null) {
+                while (i < acc.No_Of_Contacts__c) {
+                    Contact c = new Contact();
+                    c.LastName = 'Contact'+''+i;
+                    c.AccountId = acc.Id;
+                    listOfContact.add(c);
+                    i++;
+                }
+            }
+        } 
+    }
+    insert listOfContact;
+}
