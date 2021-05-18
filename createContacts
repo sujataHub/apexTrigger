@@ -1,4 +1,4 @@
-trigger countContactTrigger on Account (after insert, after update) {
+trigger createContactTrigger on Account (after insert, after update) {
     List<Account> listOfAccount = new List<Account>();
     List<Contact> listOfContact = new List<Contact>();
     for (Account a : trigger.new) {
