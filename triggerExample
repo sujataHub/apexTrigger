@@ -1,0 +1,35 @@
+trigger triggerBestExample on Account (before insert, after insert, before update,after update,before delete,after delete,
+                                      after undelete) {
+   if(trigger.isBefore) {
+      if(trigger.isInsert) {
+          System.debug('Before insert Trigger.new is --->'+Trigger.new); //(Account:{Id=null,Name=Before Insert}
+          System.debug('Before insert Trigger.old is --->'+Trigger.old); // null
+      } 
+       if(trigger.isUpdate) {
+           System.debug('Before update Trigger.new is --->'+Trigger.new);//(Account:{Id=0015g00000G66bYAAR,Name=Before/After Update}
+           System.debug('Before update Trigger.old is --->'+Trigger.old);//(Account:{Id=0015g00000G66bYAAR,Name=Before Insert}
+      }
+       if(trigger.isDelete) {
+          System.debug('Before delete Trigger.new is --->'+Trigger.new);//null
+           System.debug('Before delete Trigger.old is --->'+Trigger.old);//(Account:{Id=0015g00000G66bYAAR,Name=Before/After Update}
+      }
+   } 
+   if(trigger.isAfter) {
+      if(trigger.isInsert) {
+          System.debug('After insert Trigger.new is --->'+Trigger.new);//(Account:{Id=0015g00000G66bYAAR,Name=Before Insert}
+          System.debug('After insert Trigger.old is --->'+Trigger.old);//null
+      } 
+       if(trigger.isUpdate) {
+           System.debug('After update Trigger.new is --->'+Trigger.new);//(Account:{Id=0015g00000G66bYAAR,Name=Before/After Update}
+           System.debug('After update Trigger.old is --->'+Trigger.old);//(Account:{Id=0015g00000G66bYAAR,Name=Before Insert}
+      }
+       if(trigger.isDelete) {
+          System.debug('After delete Trigger.new is --->'+Trigger.new);//null
+          System.debug('After delete Trigger.old is --->'+Trigger.old);//(Account:{Id=0015g00000G66bYAAR,Name=Before/After Update}
+      }
+        if(trigger.isUndelete) {
+            System.debug('After undelete Trigger.new is --->'+Trigger.new);//(Account:{Id=0015g00000G66bYAAR,Name=Before/After Update}
+          System.debug('After undelete Trigger.old is --->'+Trigger.old);//null
+      }
+   }                                        
+}
