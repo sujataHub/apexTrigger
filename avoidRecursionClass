@@ -1,0 +1,5 @@
+/* This class has been created to handle recusrionTriggerExample 
+Creating a public class with static Boolean variable to avoid recursion */
+public class avoidRecursionClass {
+	public static boolean firstRun = true;
+}
