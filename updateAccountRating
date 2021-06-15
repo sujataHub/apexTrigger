@@ -1,0 +1,18 @@
+/*  Update Account Rating to ‘Hot ‘on account when opportunity stage equals 'closed Won'. */
+trigger updateAccountRating on Opportunity (after insert,after update) {
+    Set<Id> setOfAccountIds = new Set<Id>();
+    List<Account> listOfAccount = new List<Account>();
+    for(Opportunity opty : Trigger.new){
+        if(opty.StageName == 'Closed Won') {
+            setOfAccountIds.add(opty.AccountId);
+        }
+    }
+    if(setOfAccountIds.size() > 0){
+      	List<Account> queryAccount = [SELECT Id,Rating FROM Account WHERE ID IN: setOfAccountIds];
+            for(Account acc : queryAccount){
+                acc.Rating = 'Hot';
+                listOfAccount.add(acc);
+            }  
+        update listOfAccount;
+    }
+}
