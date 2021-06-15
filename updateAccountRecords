@@ -1,0 +1,11 @@
+/* Whenever phone field is updated in account then the name field 
+   should also get updated with name and phone number in accounts. */
+trigger updateAccountRecords on Account (before update) {
+    for(Account acc : Trigger.new) {
+        System.debug('trigger.oldMap.get(acc.Id).phone -->>'+trigger.oldMap.get(acc.Id).phone); //123
+        System.debug('trigger.newMap.get(acc.Id).Name -->>'+trigger.newMap.get(acc.Id).Name); //er
+        if(trigger.oldMap.get(acc.Id).phone != acc.Phone){
+            acc.Name = acc.Name + acc.Phone;
+        }
+    }
+}
