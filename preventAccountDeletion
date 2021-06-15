@@ -1,0 +1,24 @@
+/* Prevent account from deleting, if it has 2 or more contacts. 
+Note: Commented code is also working. */
+trigger preventAccountDeletion on Account (before delete) {
+    Set<Id> setOfAccountIds = new Set<Id>();
+    for(Account acc : Trigger.old){
+        setOfAccountIds.add(acc.Id);
+    }
+    /*  List<Contact> listOfContact = [SELECT Id,AccountId FROM Contact WHERE AccountId IN : setOfAccountIds];
+        system.debug('listOfContact -->>'+listOfContact);
+        system.debug('size -->>'+listOfContact.size());
+        if(listOfContact.size() >= 2){
+        System.debug('Line 9');
+        for(Account acct : Trigger.old){ 
+        acct.name.addError('This account has more than two record. Sorry!');
+        }
+      } */
+    Map<Id,Account> mapOfAccount = new Map<Id,Account>([SELECT Id,Name, (SELECT Id,LastName FROM Contacts) FROM Account WHERE Id IN: setOfAccountIds]);
+    for(Account ac : Trigger.old){
+        if(mapOfAccount.get(ac.Id).contacts.size() >= 2){
+            ac.name.addError('This account has more than two recordss. Sorry!');
+        }  
+        
+    }  
+}
