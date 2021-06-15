@@ -1,2 +1,0 @@
-# apexTrigger
-Salesforce Developer
