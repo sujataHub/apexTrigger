@@ -1,0 +1,10 @@
+trigger recursionTriggerExample on Contact (after insert) {
+    if(avoidRecursionClass.firstRun){
+       avoidRecursionClass.firstRun = false; //first make this false then insert
+       system.debug('line 4-->>'+avoidRecursionClass.firstRun);
+       insert new Contact(LastName='Venu',Phone='12345');
+       //avoidRecursionClass.firstRun = false; //No point of adding it here
+       system.debug('line 7-->>'+avoidRecursionClass.firstRun);//not even getting this line when making false at 6 line, 
+        													//though getting this statement when line 3 is executed.
+    }	
+}
