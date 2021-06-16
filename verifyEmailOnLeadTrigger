@@ -1,0 +1,16 @@
+/* When lead is created or updated then check if the email of lead is 
+   already there in existing contacts. If email already exist then throw error. */
+trigger verifyEmailTrigger on Lead (before insert,before update) {
+    Set<String> setOfEmails = new Set<String>();
+    for(Lead leado : Trigger.new){
+        if(leado.email != null){
+            setOfEmails.add(leado.email);
+        }
+    }
+    List<Contact> queryContact = [SELECT Id,Email FROM Contact WHERE Email IN: setOfEmails];
+    if(queryContact.size() > 0) {
+        for(Lead ld : Trigger.new){
+            ld.email.addError('You cant use Contact Email address');
+        }
+    }
+}
