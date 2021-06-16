@@ -1,0 +1,16 @@
+/* When an opportunity is inserted or updated then if the stage name is ‘Closed won’ then add the task. */
+trigger updatestageNameTrigger on Opportunity (after insert,after update) {
+    List<Task> listOfTask = new List<Task>();
+    for(Opportunity opty : trigger.new) {
+        if(opty.StageName == 'Closed Won'){
+            Task tk     = new Task();
+            tk.Subject  = 'Task created from Opportunity';
+            tk.WhatId   = opty.Id;
+            //tk.WhoId    = opty.OwnerId;
+            tk.Priority = 'Normal';
+            listOfTask.add(tk);
+        }
+    }
+    if(listOfTask.isEmpty()){return;}
+    insert listOfTask;
+}
