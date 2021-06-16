@@ -1,0 +1,31 @@
+/* Whenever TestPhoneOpportunity__c field in opportunity is updated ,its related field (TestPhoneAccount__c) in Account 
+and (TestPhoneContact__c ) in Contact should get updated with the updated value with TestPhoneOpportunity__c */
+trigger updateTestPhoneTrigger on Opportunity (after update) {
+    Set<Id> setOfAccountIds = new Set<Id>();
+    Map<Id,Opportunity> mapOfOpty = new Map<Id,Opportunity>();
+    List<Account> listOfAccount = new List<Account>();
+    List<Contact> listOfContact = new List<Contact>();
+    for(Opportunity opty : Trigger.new){
+        if(trigger.oldMap.get(opty.Id).TestPhoneOpportunity__c != opty.TestPhoneOpportunity__c){
+            setOfAccountIds.add(opty.AccountId);
+            mapOfOpty.put(opty.AccountId,opty);
+        }  
+    }
+    if(setOfAccountIds.isEmpty()) {return;}
+    List<Account> queryAccount = [SELECT Id,TestPhoneAccount__c,(SELECT Id,TestPhoneContact__c,AccountId FROM Contacts) FROM Account WHERE Id IN :setOfAccountIds];
+    for(Account acc : queryAccount){
+        acc.TestPhoneAccount__c = mapOfOpty.get(acc.Id).TestPhoneOpportunity__c;
+        listOfAccount.add(acc);
+        for(Contact con : acc.Contacts)
+        {
+           	con.TestPhoneContact__c = mapOfOpty.get(acc.Id).TestPhoneOpportunity__c;
+        	listOfContact.add(con); 
+        }
+    }
+    if(!listOfAccount.isEmpty()){
+      update listOfAccount;  
+    }
+    if(!listOfContact.isEmpty()){
+      update listOfContact;  
+    }
+}
