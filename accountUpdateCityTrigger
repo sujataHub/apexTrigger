@@ -1,0 +1,21 @@
+/* Trigger to update a field (city) in Account when same field(city) is updated in opportunity. */
+trigger accountUpdateTrigger on Opportunity (after update) {
+    List<String> setOfCity = new List<String>();
+    Set<Id> setOfAccountIds = new Set<Id>();
+    List<Account> listOfAccount = new List<Account>();
+    for(Opportunity opty : Trigger.new){
+        if(opty.City__c != null){
+            if(Trigger.oldMap.get(opty.Id).City__c != opty.City__c){
+                setOfCity.add(opty.City__c);
+                setOfAccountIds.add(opty.AccountId);
+            }
+        }
+    }
+    for(Account acc : [SELECT Id,City__c FROM Account WHERE Id IN :setOfAccountIds]){
+        acc.City__c = setOfCity.get(0);
+        listOfAccount.add(acc);
+    }
+    if(!listOfAccount.isEmpty()){
+        update listOfAccount;
+    }
+}
