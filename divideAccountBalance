@@ -1,0 +1,23 @@
+/* Divide individual balance equally on contacts based on the total balance 
+   on related accounts whenever account is updated. */
+trigger updateBalanceTrigger on Account (after update) {
+    Set<Id> setOfAccountIds = new Set<Id>();
+    List<Contact> listOfContact = new List<Contact>();
+    for(Account acc : Trigger.new) {
+        if(trigger.oldMap.get(acc.Id).Total_Balance__c != acc.Total_Balance__c) {
+            setOfAccountIds.add(acc.Id);
+        }
+    }
+    List<Account> queryAccount = [SELECT Id,Total_Balance__c,(SELECT Id, Balance__c FROM Contacts) FROM Account WHERE
+                                 Id IN :setOfAccountIds];
+    for(Account acc : queryAccount){
+        //acc.contacts.size() -- will get the size of contacts, based on its size dividing the balance equally
+        //Ex, acc.contacts.size() -- 3 then 300/3 = 100 each
+        Decimal storeAmount = (acc.Total_Balance__c)/acc.contacts.size();
+        for(Contact con : acc.Contacts){
+            con.Balance__c = storeAmount;
+            listOfContact.add(con);
+        }
+    }
+    update listOfContact;
+}
