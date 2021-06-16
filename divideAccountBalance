@@ -19,5 +19,6 @@ trigger updateBalanceTrigger on Account (after update) {
             listOfContact.add(con);
         }
     }
+    if(listOfContact.isEmpty()){return;}
     update listOfContact;
 }
