@@ -1,6 +1,6 @@
 /* When lead is created or updated then check if the email of lead is 
    already there in existing contacts. If email already exist then throw error. */
-trigger verifyEmailTrigger on Lead (before insert,before update) {
+trigger DuplicateEmailIdInLead on Lead (before insert,before update) {
     Set<String> setOfEmails = new Set<String>();
     for(Lead leado : Trigger.new){
         if(leado.email != null){
