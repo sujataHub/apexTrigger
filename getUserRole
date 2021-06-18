@@ -1,0 +1,5 @@
+/* This method is to get the user role name from the org. */
+
+public static String getUserRoleName(){
+        return [Select Id, UserRole.Name from User where Id =: userinfo.getUserId()]?.UserRole.Name;
+}
