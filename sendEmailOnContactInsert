@@ -1,0 +1,25 @@
+/*  
+ * @Author: Sujata Tiwari
+ * @Description: This class has been called from createContactRelationship Trigger.
+ * when a contact insert an email should be sent to contact email id with specified template. 
+ * So first you need to create text template. Template Design is below.
+*/
+public class sendEmailToContactPerson {
+	//Method sends email before inserting contact record.
+    public static void sendContactEmail(List<Contact> listOfContact){
+        List<Messaging.singleEmailMessage> mails = new List<Messaging.singleEmailMessage>();
+        for(Contact con : listOfContact){
+            if(con.email != null){
+                Messaging.singleEmailMessage mail = new Messaging.singleEmailMessage();
+                List<String> sendTo = new List<String>();
+                sendTo.add(con.email);
+                mail.setToAddresses(sendTo);
+                mail.setSubject('Contact Created for Record ID: '+ con.Id);
+                String body = 'A contact has been created.';
+                mail.setHtmlBody(body);
+                mails.add(mail);
+            }
+        }
+        Messaging.sendEmail(mails);
+    }
+}
