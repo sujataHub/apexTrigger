@@ -1,0 +1,7 @@
+ABC abc = [SELECT Id,test__c FROM ABC LIMIT 1];
+        abc.Status__c = 'Active';
+        try {
+            update abc;
+        } catch(Exception e) { 
+            System.assert(e.getMessage().contains(System.Label.CannotBeActive));
+        }
