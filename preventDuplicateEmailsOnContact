@@ -1,0 +1,12 @@
+trigger preventDuplicateEmails on Contact (before insert,before update){
+    set<Id> setOfAccountId = new set<Id>();
+    set<String> setOfEmail = new set<String>();
+    for(Contact con : trigger.new){
+        setOfAccountId.add(con.AccountId);
+        setOfEmail.add(con.Email);
+    }
+    List<Contact> listOfContact = [SELECT Id,AccountId,LastName, Email FROM Contact WHERE AccountId IN :setOfAccountId and Email IN:setOfEmail];
+    for(Contact c1 : listOfContact){
+        trigger.new[0].Email.addError('You cannot create duplicate Email.');
+    }
+}
