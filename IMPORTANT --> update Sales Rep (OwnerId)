@@ -1,0 +1,21 @@
+/* Create “Sales Rep” with data type on the Account object. While we create account records, account owners will be systematically inserted into
+ the sales representative field. While we update the record account owner, the sales representative will be systematically updated.
+ Field on Account --> Sales_Rep__c -- lookup(User)
+*/
+
+trigger TestTraining on Account (before insert, before update) {
+    Set<Id> accountOwnerId = new Set<Id>();
+        for(Account a : Trigger.new) {
+           accountOwnerId.add(a.OwnerId);
+       } 
+     /*  List<User> userList = [SELECT Id,userName FROM User WHERE Id IN :accountOwnerId];
+       for(User u : userList) {
+          mapOfUser.put(u.Id,u); 
+       } */
+       Map<Id,User> mapOfUser= new Map<Id,User>([SELECT Name FROM User WHERE Id IN :accountOwnerId]);
+       for(Account acc: Trigger.new) {
+           if(mapOfUser.containsKey(acc.ownerId)) {
+               acc.Sales_Rep__c = mapOfUser.get(acc.ownerId).Id;
+           }
+       }
+}
